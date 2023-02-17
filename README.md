@@ -17,7 +17,7 @@ Note-
 
 https://pypi.org
 
-- web portal that hosts authorized libraries(authorized by 'pyhton')
+- web portal that hosts authorized libraries(authorized by 'python')
 
 ### How to find any third party library?
 - search on pypi.org https://pypi.org
