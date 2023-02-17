@@ -11,11 +11,11 @@
 
 Note-
 - md is markdown extension
-- 'README.md' is a file typically found under most python project
+- 'README.md' is a file typically found under most project
 - this file represents documentation about the project
 
 
-https://pypi.org
+- https://pypi.org
 
 - web portal that hosts authorized libraries(authorized by 'python')
 
