@@ -3,7 +3,7 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-
+#from ..basemodel import Base
 class Character_(BaseModel):
     name: str
     height: str

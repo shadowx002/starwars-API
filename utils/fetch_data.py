@@ -8,7 +8,7 @@ from requests import Response
 
 # logging configuration
 logging.basicConfig(
-    filename="utils/example.log",
+    filename="/home/shadow/velo01/StarWarsAPI/utils/example.log",
     encoding="utf-8",
     level=logging.INFO
 )
@@ -22,6 +22,7 @@ def mylogger(func):
             logging.info(f"success - {result_.status_code}")
         except Exception:
             logging.error("there are issues in fetching details")
+            return None
 
         return result_
 
