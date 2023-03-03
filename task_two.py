@@ -1,141 +1,96 @@
 """
-----------------------
-PROBLEM STATEMENT
-----------------------
+The task 2 goes like following:
+Pull data for the the first movie in star wars
+Write the json data into a file named output.txt
 
 
-The Star Wars API lists 82 main characters in the Star Wars saga.
-
-For the first task, we would like you to use a random number generator
-that picks a number between 1-82.
-
-Using these random numbers you will be pulling 15 characters
-from the API using Python.
-
+SUBTASKS -
+1. Output should be only list of names (first name & last name) of characters
+in the movie.
+2. Output should only print list of planet names used in the movie
+3. Output should only print list of vehicle names used in the movie.
 """
 
-import random
-import argparse
-
+import json
 import requests
 
-from utils.timing import timeit
-from utils.randgen import ProduceChars
-from typing import List
+from pprint import pprint
+from typing import Dict, List
+
+from utils.fetch_data import hit_url, fetch_data
+
+FIRST_FILM_URL = "https://swapi.dev/api/films/1/"
 
 
-def generate_random_numbers_old(n: int = 15) -> list:
-    """produces n random numbers (default 15)"""
+def write_data_into_file(data: Dict) -> None:
+    """writes dict data into a file"""
 
-    i = 1
-    result = []
-    while i <= n:
-        result.append(random.randint(1, 83))
-        i += 1
-    return result
+    with open("output.txt", "w") as fp:
+        fp.write(json.dumps(data))
 
 
-def generate_random_numbers(n: int = 15) -> List[int]:
-    """produces n random numbers (default 15)"""
+def first_task() -> Dict:
+    """Returns a dict object from swapi.dev/api/films/1"""
 
-    i = 1
-    result = []
-    while i <= n:
-        result.append(random.randint(1, 83))
-        i += 1
-    return result
+    response = requests.get(FIRST_FILM_URL)
+    result_ = response.json()
+    write_data_into_file(result_)
+    return result_
 
 
-def get_url(resource_id: int, resource: str) -> str:
-    """
+def second_task(data_: Dict) -> List:
+    """pull data from swapi characters sequentially"""
 
-   Args:
-       resource_id:
+    characters = data_.get("characters")  # returns None by default
 
-   Returns:
+    names = []
+    for character in characters:
+        character_data = hit_url(character)
+        character_data = character_data.json()
+        names.append(character_data.get("name"))
 
-   """
+    # names = []
+    # all_characters = fetch_data(characters)
+    # for character in all_characters:
+    #     names.append(character.get("name"))
 
-    home_url = "https://swapi.dev"
-    relative_url = "/api/{}/{}"
-    absolute_url = home_url + relative_url.format(resource, resource_id)
-    return absolute_url
+    return names
 
 
-@timeit
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        prog="starwarsAPI",
-        usage="Fetches resources from swapi.dev based "
-              "on whatever arguments we provide",
-        description="It uses random number generator and uses requests library "
-                    "to get values from the swapi.dev"
-    )
+def third_task(data_: Dict) -> List:
+    """pull data from swapi planets sequentially"""
 
-    # we are creating an option to provide count
-    parser.add_argument('-c', '--count',
-                        default=5,
-                        help="count of characters to fetch data from")
-    parser.add_argument('-s', '--start',
-                        default=1,
-                        help="start of the range")
-    parser.add_argument('-e', '--end',
-                        default=83,
-                        help="end of the range")
-    parser.add_argument(
-        '-r',
-        '--resource',
-        default="people",
-        help="name of the resource",
-        choices=[
-            "people", "films", "starships", "vehicles", "species", "planets"
-        ]
-    )
-    arguments = parser.parse_args()
+    planets = data_.get("planets")  # returns None by default
 
-    print(f"parsed arguments are - {arguments}")
+    names = []
+    for planet in planets:
+        planet_data = hit_url(planet)
+        planet_data = planet_data.json()
+        names.append(planet_data.get("name"))
 
-    # resources = generate_random_numbers(int(arguments.count))
-
-    obj = ProduceChars(
-        int(arguments.start),
-        int(arguments.end),
-        int(arguments.count)
-    )
-
-    resources = [element for element in obj]
-    print(f"resources - {resources}")
-
-    print(f"[ INFO ] produced {len(resources)}"
-          f" random resource ids in range({arguments.start}, {arguments.end}).")
-
-    data = []
-    for resource_id in resources:
-        print(f"[ INFO ] fetching data for resource_id {resource_id}...")
-        url_ = get_url(resource_id, arguments.resource)
-
-        # `requests.get()` returns a HttpResponse
-        res = requests.get(url_)
-        print(f"res.status_code = {res.status_code}")
-
-        if res.status_code == 200:
-            # getting dict value from response object
-            result = res.json()
-
-            # capturing name from dict object
-            data.append(result.get("name"))
-
-    print(data)
+    return names
 
 
 if __name__ == "__main__":
-    """
-   HOME-URL :: https://swapi.dev
-   relative-URL:: /api/people/1
+    # first task
+    first_result = first_task()
+    # pprint(first_result)
 
-   URL
-   https://swapi.dev/api/people/1/
+    # second task : capture characters
+    second_result = second_task(first_result)
+    # pprint(second_result)
 
-   """
+    # third task : capture planets
+    third_result = third_task(first_result)
+    pprint(third_result)
 
-    main()
+
+
+
+
+
+
+
+
+
+
