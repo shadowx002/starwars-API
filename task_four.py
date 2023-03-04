@@ -102,3 +102,8 @@ if __name__ == "__main__":
     # film_data.planets
     # only values will change
     # column list can be once created and re-used
+
+## added this line just to check
+y =2
+
+x = y
